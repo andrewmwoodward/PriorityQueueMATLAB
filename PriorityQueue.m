@@ -84,20 +84,44 @@ classdef PriorityQueue < handle
                 obj.Data = obj.Data(~cellfun('isempty',obj.Data)); % remove empty element from cell array
             else
                 node = obj.Data{1};
-                obj.Data{1} = []; % remove the first element in queue
-                childIter = 2;
+                obj.Data{1} = obj.Data{obj.Size}; % replace root with last element
+                obj.Data{obj.Size} = 0; % clear the last element
+                obj.Size = obj.Size - 1;
+                leftChild = 2;
+                rightChild = 3;
                 currentIter = 1;
-                % perform bubble up
-                while childIter < obj.Size
-                    if obj.Data{childIter} == 0
-                        break
+                % perform bubble down
+                while currentIter < obj.Size
+                    if leftChild <= obj.Size && rightChild <= obj.Size && obj.Data{currentIter}(1,obj.Column) > obj.Data{leftChild}(1,obj.Column) && obj.Data{currentIter}(1,obj.Column) > obj.Data{rightChild}(1,obj.Column)
+                        if obj.Data{leftChild}(1,obj.Column) < obj.Data{rightChild}(1,obj.Column)
+                            % left child is smaller
+                            tmp = obj.Data{currentIter};
+                            obj.Data{currentIter} = obj.Data{leftChild};
+                            obj.Data{leftChild} = tmp;
+                            currentIter = leftChild;
+                            leftChild = currentIter*2;
+                            rightChild = currentIter*2+1;
+                        else
+                            % right child is smaller
+                            tmp = obj.Data{currentIter};
+                            obj.Data{currentIter} = obj.Data{rightChild};
+                            obj.Data{rightChild} = tmp;
+                            currentIter = rightChild;
+                            leftChild = currentIter*2;
+                            rightChild = currentIter*2+1;
+                        end
+                    elseif leftChild <= obj.Size && rightChild > obj.Size && obj.Data{currentIter}(1,obj.Column) > obj.Data{leftChild}(1,obj.Column)
+                        % only the left child exists
+                        tmp = obj.Data{currentIter};
+                        obj.Data{currentIter} = obj.Data{leftChild};
+                        obj.Data{leftChild} = tmp;
+                        break;
+                    else
+                        % either the children are empty or the currentIter value is minimum
+                        break;
                     end
-                    obj.Data{currentIter} = obj.Data{childIter};
-                    currentIter = childIter;
-                    childIter = currentIter*2;
                 end
             end
-            
         end
         
         % peek and return the first element of the queue
