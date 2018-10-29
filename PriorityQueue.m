@@ -92,7 +92,7 @@ classdef PriorityQueue < handle
                 currentIter = 1;
                 % perform bubble down
                 while currentIter < obj.Size
-                    if leftChild <= obj.Size && rightChild <= obj.Size && obj.Data{currentIter}(1,obj.Column) > obj.Data{leftChild}(1,obj.Column) && obj.Data{currentIter}(1,obj.Column) > obj.Data{rightChild}(1,obj.Column)
+                    if leftChild <= obj.Size && rightChild <= obj.Size && (obj.Data{currentIter}(1,obj.Column) > obj.Data{leftChild}(1,obj.Column) || obj.Data{currentIter}(1,obj.Column) > obj.Data{rightChild}(1,obj.Column))
                         if obj.Data{leftChild}(1,obj.Column) < obj.Data{rightChild}(1,obj.Column)
                             % left child is smaller
                             tmp = obj.Data{currentIter};
